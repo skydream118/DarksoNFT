@@ -1,3 +1,13 @@
+// + price
+// 1) oracle 
+//    -->game pack : 80$ (BNB)
+// 2) oracle
+//     -->training 40$(darkso token)
+// backend //password, gmail, token info -> mysql
+
+// marketplace + token sell, buy
+
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -20,6 +30,8 @@ interface IBEP20 {
 contract DARKNFT is DARKNFT_Factory, ERC721Enumerable, Ownable  {
     //using Strings for uint256;
 
+    // pack 
+
     string private _baseTokenURI;
     uint256 private _limit_pack = 20000;
     uint256 private _saled_pack;
@@ -30,21 +42,36 @@ contract DARKNFT is DARKNFT_Factory, ERC721Enumerable, Ownable  {
 
     IBEP20 private DARKSOToken;
 
-    constructor(string memory baseURI) ERC721("Hero and disciple", "COOL") {
+    constructor(string memory baseURI) ERC721("DarkSwordOnlineNFT", "DARKSONFT") {
         setBaseURI(baseURI);
-        dark_tokens.push(TokenRecord("Nox", 1, 3, 4, 140, 178, uint32(block.timestamp)));
-        dark_tokens.push(TokenRecord("Nox", 1, 3, 4, 140, 177, uint32(block.timestamp)));
+
+        address OpenWallet = 0x704e18De9fdA90aBB0e80aaD8CCf6E8B1b73e6fa;
+
+        uint256 tokenId;
+
+        // string[6] memory list_of_names;
+        // list_of_names = ["Aurora","Bert","Sarah","Kaylan","Valkyria","Nox"];
+
+        // for (uint i=0; i<list_of_names.length; i++) {
+        //     for (uint j=0; j<2; j++){
+        //         tokenId = _Mint_withStatic(list_of_names[i]);
+        //         _safeMint(OpenWallet, tokenId);
+        //         _saled_pack = _saled_pack + 1;
+
+        //     }
+        // }
+
+        tokenId = _MintDARKToken(false);
+        _safeMint(OpenWallet, tokenId);
+
+        tokenId = _MintDARKToken(false);
+        _safeMint(OpenWallet, tokenId);
+
         
-        _safeMint(msg.sender, 0);//token ID ???????????? 0..100??
-
-        _safeMint(msg.sender, 1);
-        _saled_pack = 2;
-
-        address darkso = 0x6407E501a017eCF9Ea94232876cD08E7CFF5A0aE;
-
+        address darkso = 0x2fE784d844a7520dA8863d4D5AeF134623c69394;
+        // 0x14e0605397A5f02bE4bd6855f0BA668D98C8B9dC
 
         DARKSOToken = IBEP20(darkso);
-
     }
 
     function mint_pack_withBnb() public payable {
@@ -57,12 +84,14 @@ contract DARKNFT is DARKNFT_Factory, ERC721Enumerable, Ownable  {
         // proper amount of eth have been sent or not
         require(msg.value >= _price_bnb,"price incorrect");
 
-        uint256 tokenId = totalSupply();
+        uint tokenId;
+        // = totalSupply();
         
-        require( _MintDARKToken(false) == true, "mint NFT error");
+        tokenId = _MintDARKToken(false);
         _safeMint(msg.sender, tokenId);
         
         _saled_pack = _saled_pack + 1;
+        
     }
 
     function mint_pack_withToken() public {
@@ -78,9 +107,7 @@ contract DARKNFT is DARKNFT_Factory, ERC721Enumerable, Ownable  {
         );
         DARKSOToken.transfer(address(this),_price_darkso);
 
-        uint256 tokenId = totalSupply();
-
-        require( _MintDARKToken(false) == true, "mint NFT error");
+        uint256 tokenId = _MintDARKToken(false);
 
         _safeMint(msg.sender, tokenId);
         _saled_pack = _saled_pack + 1;
@@ -106,9 +133,7 @@ contract DARKNFT is DARKNFT_Factory, ERC721Enumerable, Ownable  {
 
         require(dark_tokens[tokenID_2].readyTime < block.timestamp, "available time error");
 
-        uint256 tokenId = totalSupply();
-
-        require( _MintDARKToken(true) == true, "mint NFT error");
+        uint256 tokenId = _MintDARKToken(true);
 
         _safeMint(msg.sender, tokenId);
         
